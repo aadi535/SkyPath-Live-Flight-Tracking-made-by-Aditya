@@ -586,20 +586,20 @@ body {
     grid-template-columns: 1fr;
     height: auto;
   }
-  
+
   .map-section, .flight-list-section {
     height: 400px;
   }
-  
+
   .modal-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .header-content {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .status-info {
     width: 100%;
     justify-content: space-between;
@@ -610,25 +610,25 @@ body {
   .search-controls {
     flex-direction: column;
   }
-  
+
   .control-btn {
     padding: 10px;
   }
-  
+
   .modal-content {
     width: 95%;
     margin: 20% auto;
   }
-  
+
   .country-buttons {
     gap: 6px;
   }
-  
+
   .country-btn {
     padding: 4px 8px;
     font-size: 0.7rem;
   }
-  
+
   .type-filters {
     flex-direction: column;
   }
@@ -774,9 +774,9 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.1) 0%, 
-        rgba(255, 255, 255, 0.05) 50%, 
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
         rgba(255, 255, 255, 0.1) 100%);
     border-radius: 16px;
     pointer-events: none;
@@ -789,7 +789,7 @@ body {
         max-width: 350px;
         left: -100%;
     }
-    
+
     .welcome-popup.show {
         left: 5%;
     }
@@ -804,3 +804,38 @@ body {
 .welcome-btn span {
     animation: pulseWelcome 2s ease-in-out infinite;
 }
+/* Focused layout polish */
+body { background:#10151e; color:#e5eaf3; }
+.container { max-width:1400px; }
+a { color:#a8c6ff; text-underline-offset:4px; }
+.header,.map-section,.flight-list-section { box-shadow:none; border:1px solid #303b4c; background:#17202c; border-radius:14px; }
+.header { padding:24px; }
+.title { font-size:2rem; color:#e5eaf3; background:none; -webkit-text-fill-color:initial; }
+.title small { display:block; margin-top:8px; font-size:.85rem; font-weight:400; color:#b1bdce; }
+.project-links { display:flex; gap:24px; margin:18px 4px; font-size:.9rem; }
+.data-notice { padding:14px 18px; margin-bottom:20px; border-left:3px solid #90b5fa; background:#17202c; line-height:1.6; font-size:.9rem; }
+.data-notice.sample { border-color:#e5bd69; }
+.main-content { height:650px; grid-template-columns:minmax(0,2fr) minmax(300px,1fr); }
+.flight-list-section { display:flex; flex-direction:column; padding:20px; }
+.section-title { font-size:1.2rem; margin-bottom:14px; }
+.country-select { width:100%; padding:10px; margin-bottom:16px; color:#e5eaf3; background:#10151e; border:1px solid #48556b; border-radius:8px; }
+.flight-list { flex:1; height:auto; contain:none; min-height:0; }
+.flight-item { display:flex; flex-direction:column; align-items:flex-start; gap:8px; width:100%; text-align:left; color:#e5eaf3; font:inherit; background:#1c2939; }
+.flight-item span,.flight-item small { color:#b1bdce; }
+.flight-item:hover { transform:none; box-shadow:none; background:#27394f; }
+.aircraft-icon { color:#163d7b; font-size:26px; text-shadow:0 1px 2px white; }
+.control-btn { background:#17202c; box-shadow:none; border:1px solid #63738b; }
+button:disabled { opacity:.6; cursor:wait; }
+button:focus-visible,a:focus-visible,select:focus-visible { outline:3px solid #a8c6ff; outline-offset:3px; }
+.about-section { max-width:850px; margin:64px auto 32px; line-height:1.8; scroll-margin-top:24px; }
+.about-section h2 { font-size:1.8rem; line-height:1.3; margin:12px 0 24px; }
+.about-section p { margin-bottom:20px; color:#b8c4d5; }
+.eyebrow { letter-spacing:.15em; font-size:.75rem; }
+.tech-tags { display:flex; flex-wrap:wrap; gap:8px; margin:24px 0; }
+.tech-tags span { border:1px solid #3a4b62; padding:4px 12px; border-radius:20px; font-size:.8rem; }
+.modal-content { max-height:85vh; overflow:auto; margin:5vh auto; box-shadow:none; }
+.modal-header { background:#243955; }
+.modal-body p { margin-bottom:12px; }
+@media(max-width:900px) { .main-content { grid-template-columns:1fr; height:auto; } .map-section { height:450px; } .flight-list-section { height:480px; } .status-info { gap:16px; } }
+@media(max-width:600px) { .container { padding:12px; } .header { padding:18px; } .map-section { height:380px; } .map-controls { top:12px; right:10px; gap:6px; } .about-section { margin:40px 4px; } .about-section h2 { font-size:1.5rem; } .status-label { font-size:.7rem; } .status-value { font-size:1rem; } }
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }

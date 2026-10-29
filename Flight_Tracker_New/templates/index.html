@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Flight Tracker Made by Aditya</title>
+    <title>SkyPath | Flight Explorer by Aditya</title>
+    <meta name="description" content="Explore aircraft observations on an interactive map. A Python, Flask and JavaScript project by Aditya Suryavanshi, with a clearly labelled sample-data fallback.">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,25 +14,27 @@
         <!-- Header -->
         <header class="header">
             <div class="header-content">
-                <h1 class="title">✈️ 𝕃𝕚𝕧𝕖 ℙ𝕣𝕚𝕧𝕒𝕥𝕖 & 𝕄𝕚𝕝𝕚𝕥𝕒𝕣𝕪 𝔽𝕝𝕚𝕘𝕙𝕥 𝕋𝕣𝕒𝕔𝕜𝕖𝕣 </h1>
+                <h1 class="title">SkyPath <small>Flight explorer by Aditya</small></h1>
                 <div class="status-info">
                     <div class="status-item">
-                        <span class="status-label">Flights Tracked:</span>
+                        <span class="status-label">Flights displayed:</span>
                         <span id="flight-count" class="status-value">0</span>
                     </div>
                     <div class="status-item">
-                        <span class="status-label">Last Updated:</span>
+                        <span class="status-label">Fetched at:</span>
                         <span id="last-updated" class="status-value">--:--:--</span>
                     </div>
                     <div class="status-indicator">
                         <div id="connection-status" class="status-dot"></div>
                         <span id="connection-text">Connecting...</span>
                     </div>
-                                     
+
                 </div>
             </div>
         </header>
 
+        <nav class="project-links" aria-label="Project"><a href="#about">About this project</a><a href="https://github.com/aadi535/SkyPath-Live-Flight-Tracking-made-by-Aditya" target="_blank" rel="noopener noreferrer">View source ↗</a></nav>
+        <p id="data-notice" class="data-notice" role="status">Loading the latest available observations…</p>
         <!-- Main Content -->
         <main class="main-content">
             <!-- Map Container -->
@@ -45,8 +48,8 @@
 
             <!-- Flight List -->
             <div class="flight-list-section">
-                <h2 class="section-title">Active Flights ✈️</h2>
-                <div id="flight-list" class="flight-list">
+                <h2 class="section-title">Aircraft observations</h2>
+                <div id="flight-list" class="flight-list" aria-live="polite">
                     <div class="loading-message">
                         <div class="loading-spinner"></div>
                         <p>Loading flight data...</p>
@@ -55,12 +58,21 @@
             </div>
         </main>
 
+        <section id="about" class="about-section">
+            <p class="eyebrow">THE PROJECT</p>
+            <h2>From API response to an explorable map.</h2>
+            <p>I built SkyPath to connect a Python backend with an interactive browser experience. Flask requests aircraft observations from the OpenSky Network API, checks the response and returns a small JSON feed. JavaScript turns that feed into a map and an aircraft list, using Leaflet and OpenStreetMap tiles.</p>
+            <p>Pan and zoom to explore, filter by aircraft registration country, or select an aircraft to inspect its reported altitude, speed and heading. This project demonstrates API integration, data handling, asynchronous requests, responsive interfaces and deploying a working application.</p>
+            <p><strong>Data, honestly:</strong> OpenSky coverage and delays vary. When the service is unavailable or rate limited, SkyPath displays a clearly labelled, synthetic sample so you can still explore the interface. Sample flights are invented, not delayed live data. Registration country is not a departure location; routes and aircraft ownership are not supplied by this feed. This is an educational demo, not a navigation tool.</p>
+            <div class="tech-tags"><span>Python / Flask</span><span>JavaScript</span><span>Leaflet</span><span>REST API</span></div>
+            <p>Built by Aditya Suryavanshi · <a href="https://github.com/aadi535/SkyPath-Live-Flight-Tracking-made-by-Aditya">Explore the code on GitHub ↗</a></p>
+        </section>
         <!-- Flight Details Modal -->
-        <div id="flight-modal" class="modal">
+        <div id="flight-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 id="modal-title">Flight Details</h3>
-                    <button id="close-modal" class="close-btn">&times;</button>
+                    <button id="close-modal" aria-label="Close flight details" class="close-btn">&times;</button>
                 </div>
                 <div id="modal-body" class="modal-body">
                     <!-- Flight details will be inserted here -->
@@ -68,13 +80,6 @@
             </div>
         </div>
     </div>
-    <!-- Credit Footer -->
-<div style="position: fixed; bottom: 10px; right: 10px; font-size: 12px; color: rgba(60, 184, 203, 0.893); font-family: 'Inter', sans-serif; background: rgba(8, 9, 16, 0.7); padding: 4px 8px; border-radius: 5px; z-index: 999;">
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ᴍᴀᴅᴇ ʙʏ<br>
-    ᴀᴅɪᴛʏᴀ ꜱᴜʀʏᴀᴠᴀɴꜱʜɪ
-</div> 
-
-
     <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
