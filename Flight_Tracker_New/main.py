@@ -138,7 +138,7 @@ class FlightDataUpdater:
                     timeout=5)
                 token_response.raise_for_status()
                 headers['Authorization'] = 'Bearer ' + token_response.json()['access_token']
-            response = requests.get(self.api_url, headers=headers, timeout=8)
+            response = requests.get(self.api_url, headers=headers, timeout=12)
             self.last_api_call = current_time
 
             if response.status_code == 200:
@@ -169,7 +169,7 @@ class FlightDataUpdater:
                             flights.append(flight)
                             if len(flights) >= 500:
                                 break
-                        print(f"Successfully fetched {len(flights)} aircraft observations")
+                print(f"Successfully fetched {len(flights)} aircraft observations")
                 return (flights, False) if flights else (self.get_demo_flights(), True)
 
             elif response.status_code == 429:

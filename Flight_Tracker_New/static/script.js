@@ -57,7 +57,7 @@ async function load() {
     if (busy) return;
     busy = true; refresh.disabled = true; refresh.textContent = 'Loading…';
     try {
-        const response = await fetch('/api/flights', {signal: AbortSignal.timeout(20000)});
+        const response = await fetch('/api/flights', {signal: AbortSignal.timeout(25000)});
         if (!response.ok) throw new Error('Feed unavailable');
         const data = await response.json();
         if (!Array.isArray(data.flights)) throw new Error('Invalid feed');
