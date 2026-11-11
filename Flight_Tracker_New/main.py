@@ -135,7 +135,7 @@ class FlightDataUpdater:
                 token_response = requests.post(
                     'https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token',
                     data={'grant_type': 'client_credentials', 'client_id': client_id, 'client_secret': client_secret},
-                    timeout=5)
+                    timeout=15)
                 token_response.raise_for_status()
                 headers['Authorization'] = 'Bearer ' + token_response.json()['access_token']
             response = requests.get(self.api_url, headers=headers, timeout=12)
