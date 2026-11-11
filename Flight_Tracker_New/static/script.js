@@ -57,7 +57,7 @@ async function load() {
     if (busy) return;
     busy = true; refresh.disabled = true; refresh.textContent = 'Loading…';
     try {
-        const response = await fetch('/api/flights', {signal: AbortSignal.timeout(25000)});
+        const response = await fetch('/api/flights', {signal: AbortSignal.timeout(32000)});
         if (!response.ok) throw new Error('Feed unavailable');
         const data = await response.json();
         if (!Array.isArray(data.flights)) throw new Error('Invalid feed');
@@ -70,7 +70,7 @@ async function load() {
         document.getElementById('last-updated').textContent = data.last_updated;
         document.getElementById('connection-text').textContent = demo ? 'Synthetic demo' : 'OpenSky observations';
         document.getElementById('connection-status').className = `status-dot ${demo ? 'demo' : 'connected'}`;
-        notice.textContent = demo ? 'Demo mode · These aircraft are synthetic samples, not real positions. The live feed is currently unavailable.' : 'OpenSky observations · Coverage and delays vary. Refreshes every two minutes; up to 500 aircraft shown.';
+        notice.textContent = demo ? 'Demo mode · These aircraft are synthetic samples, not real positions. The live feed is currently unavailable.' : 'OpenSky observations · Coverage and delays vary. Updates about every five minutes · Up to 300 aircraft';
         notice.classList.toggle('sample', demo);
         render();
     } catch (error) {
@@ -78,7 +78,7 @@ async function load() {
         document.getElementById('connection-status').className = 'status-dot';
         notice.textContent = flights.length ? 'Refresh failed. Previously loaded observations remain visible; they may be out of date. Use Refresh to retry.' : 'Could not load aircraft data. Check your connection and select Refresh to try again.';
         if (!flights.length) list.replaceChildren(text('p', 'Aircraft data is unavailable. Use Refresh to retry.'));
-    } finally { busy = false; refresh.disabled = false; refresh.textContent = '↻ Refresh'; }
+    } finally { busy = false; refresh.disabled = false; refresh.textContent = 'Refresh'; }
 }
 filter.addEventListener('change', render);
 refresh.addEventListener('click', load);
@@ -95,4 +95,4 @@ document.addEventListener('keydown', e => {
 });
 window.addEventListener('resize', () => map.invalidateSize());
 load();
-setInterval(() => { if (!document.hidden) load(); }, 120000);
+setInterval(() => { if (!document.hidden) load(); }, 300000);

@@ -6,7 +6,7 @@ An interactive aircraft map by Aditya Suryavanshi, built with Python, Flask, Jav
 
 ## Data and limitations
 
-The app requests the latest available OpenSky observations. Coverage and delays vary; it is not guaranteed real-time tracking. At most 500 airborne aircraft with valid coordinates and contact within the last five minutes are shown. Registration country is not the departure country. This feed does not establish aircraft ownership, military/private classification, destinations or flown routes.
+The app requests the latest available OpenSky observations. Coverage and delays vary; it is not guaranteed real-time tracking. At most 300 airborne aircraft with valid coordinates and contact within the last five minutes are shown. Registration country is not the departure country. This feed does not establish aircraft ownership, military/private classification, destinations or flown routes.
 
 When OpenSky times out, rejects a request, returns no usable observations or rate limits access, the app shows **25 deterministic synthetic sample aircraft** with a visible demo notice. These are invented examples, not delayed live flights. The interface remains usable without credentials. This educational project is not a navigation tool.
 
