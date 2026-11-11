@@ -130,12 +130,14 @@ class FlightDataUpdater:
             print(f"Rate limiting: {self.api_call_interval - (current_time - self.last_api_call):.0f}s remaining")
             return self.get_demo_flights(), True
 
+        phase = "flight observations"
         try:
             print("Fetching live flight data...")
             headers = {'User-Agent': 'FlightTracker/1.0 (Educational Purpose)'}
             client_id = os.getenv('OPENSKY_CLIENT_ID')
             client_secret = os.getenv('OPENSKY_CLIENT_SECRET')
             if client_id and client_secret:
+                phase = "authentication"
                 token_response = requests.post(
                     'https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token',
                     data={'grant_type': 'client_credentials', 'client_id': client_id, 'client_secret': client_secret},
