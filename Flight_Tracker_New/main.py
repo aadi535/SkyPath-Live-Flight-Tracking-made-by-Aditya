@@ -142,6 +142,7 @@ class FlightDataUpdater:
                     timeout=15)
                 token_response.raise_for_status()
                 headers['Authorization'] = 'Bearer ' + token_response.json()['access_token']
+            phase = "flight observations"
             response = requests.get(self.api_url, headers=headers, timeout=24)
             self.last_api_call = current_time
 
@@ -183,7 +184,7 @@ class FlightDataUpdater:
                 return self.get_demo_flights(), True
 
         except requests.exceptions.Timeout:
-            print("API request timed out - using demo data")
+            print(f"OpenSky {phase} timed out - using demo data")
             return self.get_demo_flights(), True
         except Exception as e:
             print(f"Flight feed unavailable: {type(e).__name__}")
