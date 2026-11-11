@@ -8,6 +8,7 @@ import os
 
 MAX_AIRCRAFT = 300
 REFRESH_INTERVAL_SECONDS = 300
+DEMO_RETRY_SECONDS = 60
 
 # New Flight class
 class Flight:
@@ -138,7 +139,7 @@ class FlightDataUpdater:
                 token_response = requests.post(
                     'https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token',
                     data={'grant_type': 'client_credentials', 'client_id': client_id, 'client_secret': client_secret},
-                    timeout=15)
+                    timeout=22)
                 token_response.raise_for_status()
                 headers['Authorization'] = 'Bearer ' + token_response.json()['access_token']
             response = requests.get(self.api_url, headers=headers, timeout=12)
@@ -198,9 +199,12 @@ class FlightTrackerApp:
         self.refresh_lock = threading.Lock()
         self.refreshed_at = 0
 
+    def refresh_interval(self):
+        return DEMO_RETRY_SECONDS if self.data_manager.get_status()["demo_mode"] else REFRESH_INTERVAL_SECONDS
+
     def refresh_data(self):
         with self.refresh_lock:
-            if time.time() - self.refreshed_at >= REFRESH_INTERVAL_SECONDS:
+            if time.time() - self.refreshed_at >= self.refresh_interval():
                 flights, demo = self.data_updater.fetch_flight_data()
                 self.data_manager.update_data(flights, demo)
                 self.refreshed_at = time.time()
@@ -225,7 +229,7 @@ class FlightTrackerApp:
                 'source': 'Synthetic sample' if status['demo_mode'] else 'OpenSky Network',
                 'notice': 'Synthetic flights, not real aircraft positions.' if status['demo_mode'] else 'Latest available OpenSky observations; coverage and delays vary.'
             })
-            remaining = max(1, int(REFRESH_INTERVAL_SECONDS - (time.time() - self.refreshed_at)))
+            remaining = max(1, int(self.refresh_interval() - (time.time() - self.refreshed_at)))
             response.headers['Cache-Control'] = f'public, max-age=0, s-maxage={remaining}'
             return response
 
@@ -240,7 +244,7 @@ class FlightTrackerApp:
         @self.app.route('/api/status')
         def get_status():
             status = self.data_manager.get_status()
-            next_update = max(0, REFRESH_INTERVAL_SECONDS - (time.time() - self.refreshed_at))
+            next_update = max(0, self.refresh_interval() - (time.time() - self.refreshed_at))
             return jsonify({
                 'demo_mode': status['demo_mode'],
                 'next_update_in': int(next_update),
