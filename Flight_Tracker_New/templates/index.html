@@ -11,62 +11,46 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <h1 class="title">SkyPath <small>Flight Explorer</small></h1>
-                <div class="status-info">
-                    <div class="status-item">
-                        <span class="status-label">Aircraft</span>
-                        <span id="flight-count" class="status-value">0</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Updated</span>
-                        <span id="last-updated" class="status-value">--:--:--</span>
-                    </div>
-                    <div class="status-indicator">
-                        <div id="connection-status" class="status-dot"></div>
-                        <span id="connection-text">Connecting...</span>
-                    </div>
-
-                </div>
-            </div>
+        <header class="topbar">
+            <div class="brand"><span class="brand-icon" aria-hidden="true">↗</span>SkyPath</div>
+            <nav aria-label="Project"><a href="#about">About this project</a><a href="https://github.com/aadi535/SkyPath-Live-Flight-Tracking-made-by-Aditya" target="_blank" rel="noopener noreferrer">Source ↗</a></nav>
         </header>
-
-        <nav class="project-links" aria-label="Project"><a href="#about">About this project</a><a href="https://github.com/aadi535/SkyPath-Live-Flight-Tracking-made-by-Aditya" target="_blank" rel="noopener noreferrer">View source ↗</a></nav>
-        <p id="data-notice" class="data-notice" role="status">Loading the latest available observations…</p>
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Map Container -->
-            <div class="map-section">
-                <div id="map" class="map-container"></div>
-                <div class="map-controls">
-                    <button id="refresh-btn" class="control-btn">Refresh</button>
-                    <button id="center-btn" class="control-btn">Fit map</button>
+        <main>
+            <div class="intro">
+                <div>
+                    <p class="eyebrow">AIRCRAFT TRACKER</p>
+                    <h1>Explore the skies.</h1>
+                    <p>Browse aircraft on the map, filter by country, or select a flight for details.</p>
                 </div>
+                <div class="status-indicator"><span id="connection-status" class="status-dot demo"></span><span id="connection-text">Sample flights</span></div>
             </div>
-
-            <!-- Flight List -->
-            <div class="flight-list-section">
-                <h2 class="section-title">Aircraft</h2>
-                <div id="flight-list" class="flight-list" aria-live="polite">
-                    <div class="loading-message">
-                        <div class="loading-spinner"></div>
-                        <p>Loading flight data...</p>
+            <div class="main-content">
+                <section class="map-section" aria-label="Aircraft map">
+                    <div class="map-toolbar">
+                        <div><strong>Flight map</strong><span id="last-updated">Preview</span></div>
+                        <div class="map-controls">
+                            <button id="center-btn" class="control-btn">Fit map</button>
+                            <button id="refresh-btn" class="control-btn primary">Refresh</button>
+                        </div>
                     </div>
-                </div>
+                    <div id="map" class="map-container"></div>
+                    <p id="data-notice" class="data-notice sample" role="status">Sample positions shown while we check for live aircraft.</p>
+                </section>
+                <aside class="flight-list-section" aria-label="Aircraft directory">
+                    <div class="directory-heading"><h2>Aircraft</h2><span id="flight-count">25</span></div>
+                    <label class="search-label" for="aircraft-search">Find aircraft</label>
+                    <input id="aircraft-search" class="aircraft-search" placeholder="Callsign or aircraft ID" type="search" autocomplete="off">
+                    <div id="flight-list" class="flight-list"><p>Preparing the map…</p></div>
+                </aside>
             </div>
         </main>
-
-        <section id="about" class="about-section">
-            <p class="eyebrow">THE PROJECT</p>
-            <h2>From API response to an explorable map.</h2>
-            <p>I built SkyPath to connect a Python backend with an interactive browser experience. Flask requests aircraft observations from the OpenSky Network API, checks the response and returns a small JSON feed. JavaScript turns that feed into a map and an aircraft list, using Leaflet and OpenStreetMap tiles.</p>
-            <p>Pan and zoom to explore, filter by aircraft registration country, or select an aircraft to inspect its reported altitude, speed and heading. This project demonstrates API integration, data handling, asynchronous requests, responsive interfaces and deploying a working application.</p>
-            <p><strong>Data, honestly:</strong> OpenSky coverage and delays vary. When the service is unavailable or rate limited, SkyPath displays a clearly labelled, synthetic sample so you can still explore the interface. Sample flights are invented, not delayed live data. Registration country is not a departure location; routes and aircraft ownership are not supplied by this feed. This is an educational demo, not a navigation tool.</p>
-            <div class="tech-tags"><span>Python / Flask</span><span>JavaScript</span><span>Leaflet</span><span>REST API</span></div>
-            <p>Built by Aditya Suryavanshi · <a href="https://github.com/aadi535/SkyPath-Live-Flight-Tracking-made-by-Aditya">Explore the code on GitHub ↗</a></p>
-        </section>
+        <details id="about" class="about-section">
+            <summary>About the data</summary>
+            <p>Live observations come from OpenSky Network. Coverage varies, and positions may be delayed. The map shows up to 300 aircraft and checks for updates about every five minutes.</p>
+            <p><strong>Sample flights are invented.</strong> They appear while the live feed loads or when it is unavailable. Registration country is not the departure location. SkyPath is for exploration, not navigation.</p>
+            <p>Built by Aditya Raj (Suryavanshi) · Flask, Leaflet, and OpenStreetMap.</p>
+        </details>
+        <script id="sample-flights" type="application/json">{{ samples | tojson }}</script>
         <!-- Flight Details Modal -->
         <div id="flight-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <div class="modal-content">

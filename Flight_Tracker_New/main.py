@@ -80,6 +80,8 @@ class FlightDataUpdater:
         self.data_manager = data_manager
         self.api_call_interval = REFRESH_INTERVAL_SECONDS
         self.last_api_call = 0
+        self.access_token = None
+        self.token_refresh_at = 0
 
     def get_demo_flights(self):
         """Generate demo flight data as Flight objects"""
@@ -137,17 +139,24 @@ class FlightDataUpdater:
             client_id = os.getenv('OPENSKY_CLIENT_ID')
             client_secret = os.getenv('OPENSKY_CLIENT_SECRET')
             if client_id and client_secret:
-                phase = "authentication"
-                token_response = requests.post(
-                    'https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token',
-                    data={'grant_type': 'client_credentials', 'client_id': client_id, 'client_secret': client_secret},
-                    timeout=15)
-                token_response.raise_for_status()
-                headers['Authorization'] = 'Bearer ' + token_response.json()['access_token']
+                if not self.access_token or current_time >= self.token_refresh_at:
+                    phase = "authentication"
+                    token_response = requests.post(
+                        'https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token',
+                        data={'grant_type': 'client_credentials', 'client_id': client_id, 'client_secret': client_secret},
+                        timeout=15)
+                    token_response.raise_for_status()
+                    token_data = token_response.json()
+                    self.access_token = token_data['access_token']
+                    self.token_refresh_at = time.time() + max(0, int(token_data.get('expires_in', 1800)) - 30)
+                headers['Authorization'] = 'Bearer ' + self.access_token
             phase = "flight observations"
             response = requests.get(self.api_url, headers=headers, timeout=24)
             self.last_api_call = current_time
 
+            if response.status_code == 401:
+                self.access_token = None
+                self.token_refresh_at = 0
             if response.status_code == 200:
                 data = response.json()
                 if not isinstance(data, dict) or not isinstance(data.get("states"), list):
@@ -216,7 +225,7 @@ class FlightTrackerApp:
         """Define Flask routes"""
         @self.app.route('/')
         def index():
-            return render_template('index.html')
+            return render_template('index.html', samples=[flight.to_dict() for flight in self.data_updater.get_demo_flights()])
 
         @self.app.route('/api/flights')
         def get_flights():
