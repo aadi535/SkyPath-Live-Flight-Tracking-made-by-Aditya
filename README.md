@@ -1,8 +1,24 @@
 # SkyPath — Flight Explorer
 
-**Live demo:** https://skypath-flight-explorer.vercel.app
+[Open the flight map](https://skypath-flight-explorer.vercel.app/)
 
-An interactive aircraft map by Aditya Suryavanshi, built with Python, Flask, JavaScript, Leaflet and the OpenSky Network API. Select aircraft, inspect reported measurements, filter by registration country, and pan or zoom around the map.
+An interactive aircraft map built with Python, Flask, JavaScript, and Leaflet. Select a marker to inspect reported flight data or filter aircraft by registration country.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    Browser["Leaflet map in the browser"] -->|"Request flight snapshot"| Flask["Flask API"]
+    Flask --> Cache{"Fresh snapshot in this instance?"}
+    Cache -->|Yes| Browser
+    Cache -->|No| OpenSky["Request OpenSky observations"]
+    OpenSky -->|"Usable observations"| Live["Filter and normalize aircraft positions"]
+    OpenSky -->|"Error or no usable data"| Demo["Generate labelled synthetic aircraft"]
+    Live --> Browser
+    Demo --> Browser
+```
+
+[Flight_Tracker_New/main.py](Flight_Tracker_New/main.py) handles OpenSky requests, rate-limit and error handling, and the in-memory cache. The browser draws the returned aircraft on the map and shows whether the feed contains observations or synthetic data. OpenSky credentials, when configured, stay on the server.
 
 ## Data and limitations
 
